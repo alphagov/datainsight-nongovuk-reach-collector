@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+# Collects the weekly visits.
+# Run: './bin/collector -t TOKEN print'
+#
+# To obtain authorisation code please visit:
+#
+# https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://docs.google.com/feeds/+https://docs.googleusercontent.com/+https://spreadsheets.google.com/feeds/&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=1054017153726.apps.googleusercontent.com&hl=en&from_login=1&as=-3679b5c945e5a45a&authuser=0&pli=1
+
+require 'bundler/setup'
+Bundler.require
+
+require_relative '../lib/nongovuk_reach_collector'
+
+include GLI
+
+program_desc 'Collect the weekly visits/visitors for directgov/business_link'
+
+version 0.1
+
+desc 'Only for the first request you need to pass in the authorisation code'
+default_value nil
+arg_name 'authorisation code'
+flag [:a,:authorisation_code]
+flag [:s, :site]
+flag [:m, :metric]
+
+desc 'Print out the collected content'
+command :print do |c|
+  c.action do |global_options, options, args|
+    nongovuk_reach_collector = Collectors::NongovukReachCollector.new(global_options[:site], global_options[:metric], global_options[:authorisation_code])
+    puts nongovuk_reach_collector.collect_as_json
+  end
+end
+
+desc 'Publish the collected content to the queue'
+command :broadcast do |c|
+  c.action do |global_options, options, args|
+    nongovuk_reach_collector = Collectors::NongovukReachCollector.new(global_options[:site], global_options[:metric], global_options[:authorisation_code])
+    nongovuk_reach_collector.broadcast
+  end
+end
+
+
+exit GLI.run(ARGV)
