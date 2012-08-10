@@ -90,4 +90,12 @@ describe "Nongovuk Reach Collector" do
 
     messages.length.should == 67
   end
+
+  it "should " do
+    collector = NongovukReachCollector.new("foo", "bar")
+    messages = collector.execute
+
+    message = messages[0]
+    message[:payload][:error].should == "Unkown type: `foo:bar`"
+  end
 end

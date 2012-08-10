@@ -44,7 +44,7 @@ module Collectors
 
     def create_message_for(worksheet)
       type = "#{@site}:#{@metric}"
-      row = TYPE_TO_ROW[type]
+      row = TYPE_TO_ROW[type] or raise "Unkown type: `#{type}`"
 
       messages = []
       (2..Infinity).each do |col|
