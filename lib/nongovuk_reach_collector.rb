@@ -18,7 +18,7 @@ module Collectors
         "directgov:visitors" => 32
     }
 
-    def initialize(site, metric, auth_code)
+    def initialize(site, metric, auth_code = nil)
       @site = site
       @metric = metric
       @auth_code = auth_code
@@ -42,22 +42,6 @@ module Collectors
       end
     end
 
-    private
-
-    #ToDO what if spreadsheet is not existing
-    def get_worksheet
-      session = authenticate
-      session.spreadsheet_by_key(SPREADSHEET_KEY).worksheets[0]
-    end
-
-    def authenticate
-      auth = GoogleAuthenticationBridge::GoogleAuthentication.new(API_SCOPE, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
-      token = auth.get_oauth2_access_token(@auth_code)
-      session = GoogleDrive.login_with_oauth(token)
-
-      session
-    end
-
     def create_message_for(worksheet)
       type = "#{@site}:#{@metric}"
       row = TYPE_TO_ROW[type]
@@ -72,6 +56,22 @@ module Collectors
                 (get_date(worksheet, col) + 7).strftime)
       end
       messages
+    end
+
+    private
+
+    #ToDO what if spreadsheet is not existing
+    def get_worksheet
+      session = authenticate
+      session.spreadsheet_by_key(SPREADSHEET_KEY).worksheets[0]
+    end
+
+    def authenticate
+      auth = GoogleAuthenticationBridge::GoogleAuthentication.new(API_SCOPE, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+      token = auth.get_oauth2_access_token(@auth_code)
+      session = GoogleDrive.login_with_oauth(token)
+
+      session
     end
 
     def create_message(value, start_at, end_at)
