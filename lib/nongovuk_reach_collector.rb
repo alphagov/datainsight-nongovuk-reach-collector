@@ -24,6 +24,13 @@ module Collectors
       @auth_code = auth_code
     end
 
+    def broadcast
+      Bunny.run(ENV['AMQP']) do |client|
+        exchange = client.exchange("datainsight", :type => :topic)
+        exchange.publish(response.to_json, :key => "google_drive.#{@metric}.weekly")
+      end
+    end
+
     def collect_as_json
       response.to_json
     end
@@ -103,7 +110,5 @@ module Collectors
     def get_date(worksheet, col)
       DateTime.strptime(worksheet[36, col], "%m/%d/%Y")
     end
-
-
   end
 end
