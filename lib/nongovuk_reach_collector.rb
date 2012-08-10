@@ -91,6 +91,7 @@ module Collectors
           },
           :payload => {
               :value => value,
+              :site => @site,
               :start_at => start_at,
               :end_at => end_at
           }
