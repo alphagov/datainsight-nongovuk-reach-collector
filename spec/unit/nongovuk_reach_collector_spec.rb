@@ -15,7 +15,7 @@ describe "Nongovuk Reach Collector" do
   end
 
   it "should load all available business link visits data points" do
-    collector = NongovukReachCollector.new("business_link", "visits")
+    collector = NongovukReachCollector.new("businesslink", "visits")
     messages = collector.create_message_for(@worksheet)
 
     message = messages[0]
@@ -54,7 +54,7 @@ describe "Nongovuk Reach Collector" do
   end
 
   it "should load all available business link visitors data points" do
-    collector = NongovukReachCollector.new("business_link", "visitors")
+    collector = NongovukReachCollector.new("businesslink", "visitors")
     messages = collector.create_message_for(@worksheet)
 
     message = messages[0]

@@ -13,7 +13,7 @@ require_relative '../lib/nongovuk_reach_collector'
 
 include GLI
 
-program_desc 'Collect the weekly visits/visitors for directgov/business_link'
+program_desc 'Collect the weekly visits/visitors for directgov/businesslink'
 
 version 0.1
 

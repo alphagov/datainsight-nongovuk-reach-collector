@@ -12,9 +12,9 @@ module Collectors
 
     Infinity      = 1.0/0
     TYPE_TO_ROW = {
-        "business_link:visits" => 37,
+        "businesslink:visits" => 37,
         "directgov:visits" => 38,
-        "business_link:visitors" => 31,
+        "businesslink:visitors" => 31,
         "directgov:visitors" => 32
     }
 
@@ -27,6 +27,7 @@ module Collectors
     def broadcast
       Bunny.run(ENV['AMQP']) do |client|
         exchange = client.exchange("datainsight", :type => :topic)
+        @metric or raise "Metric required. Can't publish the message."
         response.each do |msg|
           exchange.publish(msg.to_json, :key => "google_drive.#{@metric}.weekly")
         end
