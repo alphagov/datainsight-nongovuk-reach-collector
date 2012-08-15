@@ -58,10 +58,11 @@ module Collectors
 
       messages = []
       (2..Infinity).each do |col|
-        break if worksheet[row, col] == "" || worksheet[row, col].nil?
+        break if get_date(worksheet, col) >= Date.today
+        value = (worksheet[row, col] == "" || worksheet[row, col].nil?) ? nil : worksheet[row, col].gsub(",", "").to_i
         messages <<
             create_message(
-                worksheet[row, col].gsub(",", "").to_i,
+                value,
                 get_date(worksheet, col).strftime,
                 (get_date(worksheet, col) + 7).strftime)
       end
