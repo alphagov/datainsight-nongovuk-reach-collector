@@ -1,3 +1,5 @@
 tokens
 .bundle
 spec/reports
+*.zip
+vendor
