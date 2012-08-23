@@ -34,7 +34,7 @@ module Collectors
     end
 
     def collect_as_json
-      response.to_json
+      response.each(&:to_json)
     end
 
     def response
