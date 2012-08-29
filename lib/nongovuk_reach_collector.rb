@@ -1,6 +1,8 @@
 require "date"
 require "json"
 
+Datainsight::Logging.configure()
+
 module Collectors
   class NongovukReachCollector
 
@@ -24,12 +26,17 @@ module Collectors
     end
 
     def broadcast
-      Bunny.run(ENV['AMQP']) do |client|
-        exchange = client.exchange("datainsight", :type => :topic)
-        @metric or raise "Metric required. Can't publish the message."
-        response.each do |msg|
-          exchange.publish(msg.to_json, :key => "google_drive.#{@metric}.weekly")
+      begin
+        Bunny.run(ENV['AMQP']) do |client|
+          exchange = client.exchange("datainsight", :type => :topic)
+          @metric or raise "Metric required. Can't publish the message."
+          response.each do |msg|
+            logger.debug{ "Broadcast message #{msg}"}
+            exchange.publish(msg.to_json, :key => "google_drive.#{@metric}.weekly")
+          end
         end
+      rescue => e
+        logger.error { e }
       end
     end
 
@@ -42,13 +49,9 @@ module Collectors
     end
 
     def execute
-      begin
-        worksheet = get_worksheet
+      worksheet = get_worksheet
 
-        create_message_for(worksheet)
-      rescue Exception => e
-        [create_exception_message(e.message)]
-      end
+      create_message_for(worksheet)
     end
 
     def create_message_for(worksheet)
@@ -96,18 +99,6 @@ module Collectors
           :site => @site,
           :start_at => start_at,
           :end_at => end_at
-        }
-      }
-    end
-
-    def create_exception_message(message)
-      {
-        :envelope => {
-          :collected_at => DateTime.now,
-          :collector => "nongovuk_reach",
-        },
-        :payload => {
-          :error => message
         }
       }
     end

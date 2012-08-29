@@ -12,12 +12,17 @@ describe "Nongovuk Reach Collector" do
 
   a_minute = Rational(1, 24*60)
 
+  it "should log error message" do
+    collector = NongovukReachCollector.new("site", "metric")
+    Logging.logger[collector].should_receive(:error)
+
+    collector.broadcast
+  end
+
   it "should fail if site and metric are unknown" do
     collector = NongovukReachCollector.new("site", "metric")
-    messages = collector.execute
 
-    message = messages[0]
-    message[:payload][:error].should == "Unkown type: `site:metric`"
+    -> { collector.execute }.should raise_error(Exception, "Unkown type: `site:metric`")
   end
 
   describe "worksheet with gaps" do
