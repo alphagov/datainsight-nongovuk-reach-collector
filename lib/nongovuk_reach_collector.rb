@@ -12,11 +12,13 @@ module Collectors
 
     SPREADSHEET_KEY="0Aq4mEanyr9A2dDVyMEpaNV9DbXZuNDV6cnJ5QzVyVVE"
 
+    DATE_TO_ROW = 38
+
     TYPE_TO_ROW = {
-      "businesslink:visits" => 37,
-      "directgov:visits" => 38,
-      "businesslink:visitors" => 31,
-      "directgov:visitors" => 32
+      "businesslink:visits" => 39,
+      "directgov:visits" => 40,
+      "businesslink:visitors" => 33,
+      "directgov:visitors" => 34
     }
 
     def initialize(site, metric, auth_code = nil)
@@ -104,7 +106,12 @@ module Collectors
     end
 
     def get_date(worksheet, col)
-      DateTime.strptime(worksheet[36, col], "%m/%d/%Y")
+      date_string = worksheet[DATE_TO_ROW, col]
+      begin
+        DateTime.strptime(date_string, "%m/%d/%Y")
+      rescue => e
+        raise "Error parsing date #{date_string} in Worksheet worksheet[#{DATE_TO_ROW}, #{col}]"
+      end
     end
   end
 end
