@@ -1,14 +1,15 @@
-def cron_command(site, metric)
-  root_path = File.expand_path(File.dirname(__FILE__) + "/../")
+root_path = File.expand_path(File.dirname(__FILE__) + "/../")
+set :output, {
+    :standard => "#{root_path}/log/cron.out.log",
+    :error => "#{root_path}/log/cron.err.log"
+}
+job_type :collector, "cd :path && RACK_ENV=:environment bundle exec bin/collector --site=:site --metric=:metric :task :output"
 
-  "cd #{root_path} && RACK_ENV=production bundle exec bin/collector -s=#{site} -m=#{metric} broadcast" +
-  " >> #{root_path}/log/cron.out.log 2>> #{root_path}/log/cron.err.log"
-end
 
 
 every [:monday, :tuesday], :at => '4pm' do
-  command cron_command(site = "businesslink", metric = "visits")
-  command cron_command(site = "directgov", metric = "visits")
-  command cron_command(site = "businesslink", metric = "visitors")
-  command cron_command(site = "directgov", metric = "visitors")
+  collector "broadcast", :site => "businesslink", :metric => "visits"
+  collector "broadcast", :site => "directgov", :metric => "visits"
+  collector "broadcast", :site => "businesslink", :metric => "visitors"
+  collector "broadcast", :site => "directgov", :metric => "visitors"
 end
