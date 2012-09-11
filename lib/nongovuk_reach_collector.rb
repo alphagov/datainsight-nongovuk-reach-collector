@@ -29,6 +29,8 @@ module Collectors
 
     def broadcast
       begin
+        logger.info { "Starting to collect non-GovUk data" }
+        logger.info { "#{@site} #{@metric}" }
         Bunny.run(ENV['AMQP']) do |client|
           exchange = client.exchange("datainsight", :type => :topic)
           @metric or raise "Metric required. Can't publish the message."
@@ -37,6 +39,7 @@ module Collectors
             exchange.publish(msg.to_json, :key => "google_drive.#{@metric}.weekly")
           end
         end
+        logger.info { "Collected the non-GovUk data" }
       rescue => e
         logger.error { e }
       end
