@@ -100,10 +100,12 @@ module Collectors
           :collector => "nongovuk_reach",
         },
         :payload => {
-          :value => value,
-          :site => @site,
           :start_at => start_at,
-          :end_at => end_at
+          :end_at => end_at,
+          :value => {
+            @metric.to_sym => value,
+            :site => @site
+          }
         }
       }
     end
