@@ -7,8 +7,8 @@ module Collectors
   class NongovukReachCollector
 
     GOOGLE_API_SCOPE = "https://docs.google.com/feeds/ https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/"
-    GOOGLE_CREDENTIALS = '/etc/gds/google_credentials.yml'
-    GOOGLE_TOKEN = "/var/lib/gds/google-drive-token.yml"
+    GOOGLE_CREDENTIALS = '/etc/govuk/datainsight/google_credentials.yml'
+    GOOGLE_TOKEN = "/var/lib/govuk/datainsight/google-drive-token.yml"
 
     SPREADSHEET_KEY="0Aq4mEanyr9A2dDVyMEpaNV9DbXZuNDV6cnJ5QzVyVVE"
 
