@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require_relative "../spec_helper"
 require_relative "../../lib/nongovuk_reach_collector"
 require_relative "../worksheet"
@@ -11,13 +12,6 @@ describe "Nongovuk Reach Collector" do
   end
 
   a_minute = Rational(1, 24*60)
-
-  it "should log error message" do
-    collector = NongovukReachCollector.new("site", "metric")
-    Logging.logger[collector].should_receive(:error)
-
-    collector.broadcast
-  end
 
   it "should fail if site and metric are unknown" do
     collector = NongovukReachCollector.new("site", "metric")

@@ -1,13 +1,18 @@
+# Collects the weekly visits.
+# Run: './bin/collector -t TOKEN print'
+#
+# To obtain authorisation code please visit:
+#
+# https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=70519367703-3j2pb73bd9kjr800coecnt5jv4ntfeso.apps.googleusercontent.com
+
 require "date"
 require "json"
-
-Datainsight::Logging.configure()
 
 module Collectors
   class NongovukReachCollector
 
     GOOGLE_API_SCOPE = "https://docs.google.com/feeds/ https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/"
-    GOOGLE_CREDENTIALS = '/etc/govuk/datainsight/google_credentials.yml'
+    GOOGLE_CREDENTIALS = "/etc/govuk/datainsight/google_credentials.yml"
     GOOGLE_TOKEN = "/var/lib/govuk/datainsight/google-drive-token.yml"
 
     SPREADSHEET_KEY="0Aq4mEanyr9A2dDVyMEpaNV9DbXZuNDV6cnJ5QzVyVVE"
@@ -25,28 +30,6 @@ module Collectors
       @site = site
       @metric = metric
       @auth_code = auth_code
-    end
-
-    def broadcast
-      begin
-        logger.info { "Starting to collect non-GovUk data" }
-        logger.info { "#{@site} #{@metric}" }
-        Bunny.run(ENV['AMQP']) do |client|
-          exchange = client.exchange("datainsight", :type => :topic)
-          @metric or raise "Metric required. Can't publish the message."
-          response.each do |msg|
-            logger.debug{ "Broadcast message #{msg}"}
-            exchange.publish(msg.to_json, :key => "google_drive.#{@metric}.weekly")
-          end
-        end
-        logger.info { "Collected the non-GovUk data" }
-      rescue => e
-        logger.error { e }
-      end
-    end
-
-    def collect_as_json
-      response.each(&:to_json)
     end
 
     def response
