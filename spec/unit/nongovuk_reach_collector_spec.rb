@@ -26,7 +26,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should not present future Directgov data points" do
       collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       found = messages.select {|message| message[:payload][:start_at] == "2012-07-02T00:00:00+00:00"}
       found.should have(1).item
@@ -40,7 +40,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should send nil for Directgov data points that are missing" do
       collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       found = messages.select {|message| message[:payload][:start_at] == "2012-06-25T00:00:00+00:00"}
       found.should have(1).item
@@ -60,7 +60,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should load all available business link visits data points" do
       collector = NongovukReachCollector.new("businesslink", "visits")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       message = messages[0]
       message[:payload][:value][:visits].should == 128229
@@ -72,7 +72,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should load all available directgov visits data points" do
       collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       message = messages[0]
       message[:payload][:value][:visits].should == 4638888
@@ -84,7 +84,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should load all available business link visitors data points" do
       collector = NongovukReachCollector.new("businesslink", "visitors")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       message = messages[0]
       message[:payload][:value][:visitors].should == 106884
@@ -96,7 +96,7 @@ describe "Nongovuk Reach Collector" do
 
     it "should load all available directgov visitors data points" do
       collector = NongovukReachCollector.new("directgov", "visitors")
-      messages = collector.create_message_for(@worksheet)
+      messages = collector.create_messages_for(@worksheet)
 
       message = messages[0]
       message[:payload][:value][:visitors].should == 3730422

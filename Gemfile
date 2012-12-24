@@ -10,7 +10,7 @@ gem "gli", "1.6.0"
 gem "google_drive"
 gem "whenever", :require => false
 gem "datainsight_logging"
-gem "datainsight_collector"
+gem "datainsight_collector", "0.0.4"
 
 group :test do
   gem "rspec"

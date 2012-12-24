@@ -34,17 +34,17 @@ module Collectors
       @auth_code = auth_code
     end
 
-    def response
+    def messages
       @response ||= execute
     end
 
     def execute
       worksheet = get_worksheet
 
-      create_message_for(worksheet)
+      create_messages_for(worksheet)
     end
 
-    def create_message_for(worksheet)
+    def create_messages_for(worksheet)
       type = "#{@site}:#{@metric}"
       row = TYPE_TO_ROW[type] or raise "Unkown type: `#{type}`"
 
