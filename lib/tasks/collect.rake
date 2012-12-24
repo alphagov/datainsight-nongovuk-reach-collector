@@ -11,7 +11,7 @@ namespace :collect do
     task key do
       rack_env = ENV.fetch('RACK_ENV', 'development')
       root_path = File.expand_path(File.dirname(__FILE__) + "/../../")
-      sh %{cd #{root_path} && RACK_ENV=#{rack_env} bundle exec bin/collector --site=#{params[:site]} --metric=#{params[:metric]} broadcast}
+      sh %{cd #{root_path} && RACK_ENV=#{rack_env} bundle exec collector --site=#{params[:site]} --metric=#{params[:metric]} broadcast}
     end
   end
 end

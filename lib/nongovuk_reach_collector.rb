@@ -7,6 +7,8 @@
 
 require "date"
 require "json"
+require "google_auth_bridge"
+require "google_drive"
 
 module Collectors
   class NongovukReachCollector
