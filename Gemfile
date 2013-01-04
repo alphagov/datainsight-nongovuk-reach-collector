@@ -15,4 +15,5 @@ gem "datainsight_collector", "0.0.4"
 group :test do
   gem "rspec"
   gem "ci_reporter"
+  gem "timecop"
 end

@@ -1,3 +1,3 @@
-Bundler.require(:default, :spec)
+Bundler.require(:default, :test)
 
 require "rspec"

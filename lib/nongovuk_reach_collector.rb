@@ -51,7 +51,8 @@ module Collectors
       messages = []
       col = 2
       loop do
-        break if get_date(worksheet, col) >= Date.today
+        date = get_date(worksheet, col)
+        break if date.nil? or date >= Date.today
         value = (worksheet[row, col] == "" || worksheet[row, col].nil?) ? nil : worksheet[row, col].gsub(",", "").to_i
         messages <<
           create_message(
@@ -97,6 +98,7 @@ module Collectors
 
     def get_date(worksheet, col)
       date_string = worksheet[DATE_TO_ROW, col]
+      return nil if date_string.nil? or date_string.empty?
       begin
         DateTime.strptime(date_string, "%m/%d/%Y")
       rescue => e

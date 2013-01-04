@@ -19,91 +19,91 @@ describe "Nongovuk Reach Collector" do
     -> { collector.execute }.should raise_error(Exception, "Unkown type: `site:metric`")
   end
 
-  describe "worksheet with gaps" do
-    before(:each) do
-      @worksheet = WorksheetStub.from_CSV(File.dirname(__FILE__) + "/../fixtures/weekly_reach_worksheet_with_blanks.csv")
+  Timecop.travel(DateTime.parse("2012-12-01")) do
+    describe "worksheet with gaps" do
+      before(:each) do
+        @worksheet = WorksheetStub.from_CSV(File.dirname(__FILE__) + "/../fixtures/weekly_reach_worksheet_with_blanks.csv")
+      end
+
+      it "should not present future Directgov data points" do
+        collector = NongovukReachCollector.new("directgov", "visits")
+        messages = collector.create_messages_for(@worksheet)
+
+        found = messages.select { |message| message[:payload][:start_at] == "2012-07-02T00:00:00+00:00" }
+        found.should have(1).item
+        message = found.first
+        message[:payload][:value][:visits].should == 4801934
+        message[:payload][:start_at].should == "2012-07-02T00:00:00+00:00"
+        message[:payload][:end_at].should == "2012-07-09T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+      end
+
+      it "should send nil for Directgov data points that are missing" do
+        collector = NongovukReachCollector.new("directgov", "visits")
+        messages = collector.create_messages_for(@worksheet)
+
+        found = messages.select { |message| message[:payload][:start_at] == "2012-06-25T00:00:00+00:00" }
+        found.should have(1).item
+        message = found.first
+        message[:payload][:value][:visits].should be_nil
+        message[:payload][:start_at].should == "2012-06-25T00:00:00+00:00"
+        message[:payload][:end_at].should == "2012-07-02T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+      end
     end
 
-    it "should not present future Directgov data points" do
-      collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_messages_for(@worksheet)
+    describe "worksheet without gaps" do
+      before(:each) do
+        @worksheet = WorksheetStub.from_CSV(File.dirname(__FILE__) + "/../fixtures/weekly_reach_worksheet.csv")
+      end
 
-      found = messages.select {|message| message[:payload][:start_at] == "2012-07-02T00:00:00+00:00"}
-      found.should have(1).item
-      message = found.first
-      message[:payload][:value][:visits].should == 4801934
-      message[:payload][:start_at].should == "2012-07-02T00:00:00+00:00"
-      message[:payload][:end_at].should == "2012-07-09T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+      it "should load all available business link visits data points" do
+        collector = NongovukReachCollector.new("businesslink", "visits")
+        messages = collector.create_messages_for(@worksheet)
 
-    end
+        message = messages[0]
+        message[:payload][:value][:visits].should == 128229
+        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
+        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
 
-    it "should send nil for Directgov data points that are missing" do
-      collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_messages_for(@worksheet)
+      end
 
-      found = messages.select {|message| message[:payload][:start_at] == "2012-06-25T00:00:00+00:00"}
-      found.should have(1).item
-      message = found.first
-      message[:payload][:value][:visits].should be_nil
-      message[:payload][:start_at].should == "2012-06-25T00:00:00+00:00"
-      message[:payload][:end_at].should == "2012-07-02T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+      it "should load all available directgov visits data points" do
+        collector = NongovukReachCollector.new("directgov", "visits")
+        messages = collector.create_messages_for(@worksheet)
 
-    end
-  end
+        message = messages[0]
+        message[:payload][:value][:visits].should == 4638888
+        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
+        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
 
-  describe "worksheet without gaps" do
-    before(:each) do
-      @worksheet = WorksheetStub.from_CSV(File.dirname(__FILE__) + "/../fixtures/weekly_reach_worksheet.csv")
-    end
+      end
 
-    it "should load all available business link visits data points" do
-      collector = NongovukReachCollector.new("businesslink", "visits")
-      messages = collector.create_messages_for(@worksheet)
+      it "should load all available business link visitors data points" do
+        collector = NongovukReachCollector.new("businesslink", "visitors")
+        messages = collector.create_messages_for(@worksheet)
 
-      message = messages[0]
-      message[:payload][:value][:visits].should == 128229
-      message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-      message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+        message = messages[0]
+        message[:payload][:value][:visitors].should == 106884
+        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
+        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
 
-    end
+      end
 
-    it "should load all available directgov visits data points" do
-      collector = NongovukReachCollector.new("directgov", "visits")
-      messages = collector.create_messages_for(@worksheet)
+      it "should load all available directgov visitors data points" do
+        collector = NongovukReachCollector.new("directgov", "visitors")
+        messages = collector.create_messages_for(@worksheet)
 
-      message = messages[0]
-      message[:payload][:value][:visits].should == 4638888
-      message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-      message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
+        message = messages[0]
+        message[:payload][:value][:visitors].should == 3730422
+        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
+        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
 
-    end
-
-    it "should load all available business link visitors data points" do
-      collector = NongovukReachCollector.new("businesslink", "visitors")
-      messages = collector.create_messages_for(@worksheet)
-
-      message = messages[0]
-      message[:payload][:value][:visitors].should == 106884
-      message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-      message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
-
-    end
-
-    it "should load all available directgov visitors data points" do
-      collector = NongovukReachCollector.new("directgov", "visitors")
-      messages = collector.create_messages_for(@worksheet)
-
-      message = messages[0]
-      message[:payload][:value][:visitors].should == 3730422
-      message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-      message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
-      message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
-
+      end
     end
   end
 end
