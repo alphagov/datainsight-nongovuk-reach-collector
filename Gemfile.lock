@@ -19,7 +19,7 @@ GEM
     ci_reporter (1.7.1)
       builder (>= 2.1.2)
     connection_pool (0.9.2)
-    datainsight_collector (0.0.4)
+    datainsight_collector (0.0.6)
       bunny
       datainsight_logging
       gli (= 1.6.0)
@@ -99,7 +99,7 @@ DEPENDENCIES
   airbrake (= 3.1.5)
   bunny
   ci_reporter
-  datainsight_collector (= 0.0.4)
+  datainsight_collector (= 0.0.6)
   datainsight_logging
   gli (= 1.6.0)
   google-api-client
