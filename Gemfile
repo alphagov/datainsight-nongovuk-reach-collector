@@ -1,5 +1,5 @@
 source :rubygems
-source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
+source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 
 gem "rake"
 gem "airbrake", "3.1.5"
@@ -9,8 +9,8 @@ gem "bunny"
 gem "gli", "1.6.0"
 gem "google_drive"
 gem "whenever", :require => false
-gem "datainsight_logging"
-gem "datainsight_collector", "0.0.6"
+gem "datainsight_logging", "0.0.3"
+gem "datainsight_collector", "0.0.9"
 
 group :test do
   gem "rspec"
