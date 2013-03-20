@@ -100,7 +100,7 @@ module Collectors
       date_string = worksheet[DATE_TO_ROW, col]
       return nil if date_string.nil? or date_string.empty?
       begin
-        DateTime.strptime(date_string, "%m/%d/%Y")
+        DateTime.strptime(date_string, "%m/%d/%Y").to_local_timezone
       rescue => e
         raise "Error parsing date #{date_string} in Worksheet worksheet[#{DATE_TO_ROW}, #{col}]"
       end

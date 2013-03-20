@@ -29,12 +29,12 @@ describe "Nongovuk Reach Collector" do
         collector = NongovukReachCollector.new("directgov", "visits")
         messages = collector.create_messages_for(@worksheet)
 
-        found = messages.select { |message| message[:payload][:start_at] == "2012-07-02T00:00:00+00:00" }
+        found = messages.select { |message| message[:payload][:start_at] == "2012-07-02T01:00:00+01:00" }
         found.should have(1).item
         message = found.first
         message[:payload][:value][:visits].should == 4801934
-        message[:payload][:start_at].should == "2012-07-02T00:00:00+00:00"
-        message[:payload][:end_at].should == "2012-07-09T00:00:00+00:00"
+        message[:payload][:start_at].should == "2012-07-02T01:00:00+01:00"
+        message[:payload][:end_at].should == "2012-07-09T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
@@ -44,12 +44,12 @@ describe "Nongovuk Reach Collector" do
         collector = NongovukReachCollector.new("directgov", "visits")
         messages = collector.create_messages_for(@worksheet)
 
-        found = messages.select { |message| message[:payload][:start_at] == "2012-06-25T00:00:00+00:00" }
+        found = messages.select { |message| message[:payload][:start_at] == "2012-06-25T01:00:00+01:00" }
         found.should have(1).item
         message = found.first
         message[:payload][:value][:visits].should be_nil
-        message[:payload][:start_at].should == "2012-06-25T00:00:00+00:00"
-        message[:payload][:end_at].should == "2012-07-02T00:00:00+00:00"
+        message[:payload][:start_at].should == "2012-06-25T01:00:00+01:00"
+        message[:payload][:end_at].should == "2012-07-02T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
@@ -67,8 +67,8 @@ describe "Nongovuk Reach Collector" do
 
         message = messages[0]
         message[:payload][:value][:visits].should == 128229
-        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:payload][:start_at].should == "2011-03-28T01:00:00+01:00"
+        message[:payload][:end_at].should == "2011-04-04T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
@@ -80,8 +80,8 @@ describe "Nongovuk Reach Collector" do
 
         message = messages[0]
         message[:payload][:value][:visits].should == 4638888
-        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:payload][:start_at].should == "2011-03-28T01:00:00+01:00"
+        message[:payload][:end_at].should == "2011-04-04T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
@@ -93,8 +93,8 @@ describe "Nongovuk Reach Collector" do
 
         message = messages[0]
         message[:payload][:value][:visitors].should == 106884
-        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:payload][:start_at].should == "2011-03-28T01:00:00+01:00"
+        message[:payload][:end_at].should == "2011-04-04T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
@@ -106,8 +106,8 @@ describe "Nongovuk Reach Collector" do
 
         message = messages[0]
         message[:payload][:value][:visitors].should == 3730422
-        message[:payload][:start_at].should == "2011-03-28T00:00:00+00:00"
-        message[:payload][:end_at].should == "2011-04-04T00:00:00+00:00"
+        message[:payload][:start_at].should == "2011-03-28T01:00:00+01:00"
+        message[:payload][:end_at].should == "2011-04-04T01:00:00+01:00"
         message[:envelope][:collected_at].should be_within(a_minute).of(DateTime.now)
       end
     end
