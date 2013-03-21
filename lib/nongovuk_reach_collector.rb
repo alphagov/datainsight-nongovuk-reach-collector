@@ -9,6 +9,7 @@ require "date"
 require "json"
 require "google_auth_bridge"
 require "google_drive"
+require "timezone_helper"
 
 module Collectors
   class NongovukReachCollector
@@ -57,8 +58,8 @@ module Collectors
         messages <<
           create_message(
             value,
-            get_date(worksheet, col).strftime,
-            (get_date(worksheet, col) + 7).strftime)
+            get_date(worksheet, col).with_tz_offset("Europe/London").strftime,
+            (get_date(worksheet, col) + 7).with_tz_offset("Europe/London").strftime)
 
         col += 1
       end
