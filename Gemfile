@@ -10,7 +10,7 @@ gem "gli", "1.6.0"
 gem "google_drive"
 gem "whenever", :require => false
 gem "datainsight_logging", "0.0.3"
-gem "datainsight_collector", "0.0.10", :require => 'timezone_helper'
+gem "datainsight_collector", "0.0.10"
 gem "tzinfo", "~> 0.3.37"
 
 group :test do
